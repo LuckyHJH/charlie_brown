@@ -1,0 +1,8 @@
+Data/
+Runtime/
+Uploads/
+Application/Common/Conf/config.php
+Application/User/Conf/config.php
+*.svn
+*.sql
+*.zip
