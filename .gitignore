@@ -3,6 +3,9 @@ Runtime/
 Uploads/
 Application/Common/Conf/config.php
 Application/User/Conf/config.php
+.git/
+.idea/
+.DS_Store
 *.svn
 *.sql
 *.zip
