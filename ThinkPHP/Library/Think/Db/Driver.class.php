@@ -795,11 +795,11 @@ abstract class Driver {
             }elseif(is_scalar($val)) { // 过滤非标量数据
                 $fields[]   =   $this->parseKey($key);
                 if(0===strpos($val,':') && in_array($val,array_keys($this->bind))){
-                    $values[]   =   $this->parseValue($val);
-                }else{
                     $name       =   count($this->bind);
                     $values[]   =   ':'.$name;
                     $this->bindParam($name,$val);
+                }else{
+                    $values[]   =   $this->parseValue($val);
                 }
             }
         }
