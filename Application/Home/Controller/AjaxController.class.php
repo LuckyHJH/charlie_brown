@@ -166,6 +166,32 @@ class AjaxController extends HomeController {
         $this->_output();
     }
 
+    //检测兑换码
+    function check(){
+        $code = $_REQUEST['code'];
+        $info = M('Coupon')->where(array('code'=>$code))->find();
+        if (empty($info)) {
+            $this->_output(array(), '兑换码不存在', 1);
+        } elseif ($info['status'] != 1) {
+            $this->_output(array(), '兑换码已经被使用', 2);
+        } else {
+            $this->_output($info, '验证成功');
+        }
+    }
+    //使用兑换码
+    function convert() {
+        $code = $_REQUEST['code'];
+        $info = M('Coupon')->where(array('code'=>$code))->find();
+        if ($info['status'] == 0) {
+            $this->_output(array(), '兑换码不可用', 2);
+        }
+        if ($info['status'] == 2) {
+            $this->_output(array(), '兑换码已经被使用', 2);
+        }
+        M('Coupon')->where(array('code'=>$code))->setField('status', 2);
+        $this->_output(array(), '已成功使用');
+    }
+
     protected function _output($data = array(), $info = '', $status = 0){
         $output = array(
             'status'=>$status,
