@@ -13,4 +13,14 @@ class IndexController extends HomeController {
         $this->display();
     }
 
+    //清除数据
+    public function clear(){
+        $user = cookie('user');
+        if (!empty($user)) {
+            cookie('coupon', null);
+            M('Record')->where(array('user'=>$user))->delete();
+            M('Coupon')->where(array('user'=>$user))->delete();
+        }
+        echo '已清除数据';
+    }
 }

@@ -141,7 +141,11 @@ class AjaxController extends HomeController {
                 'use_time'=>0,
                 'code'=>$coupon,
             );
-            M('Coupon')->add($coupon_data);
+            $res = M('Coupon')->add($coupon_data);
+            if (empty($res)) {
+                M('Record')->where(array('id'=>$result))->delete();
+                $this->_output(array(), '发生了错误，请再试一次', 4);
+            }
             cookie('coupon', $coupon);
         } else {
             $coupon = '';
@@ -164,6 +168,25 @@ class AjaxController extends HomeController {
         cookie('coupon', null);
         M('Record')->where(array('date'=>date('ymd')))->delete();
         $this->_output();
+    }
+    //插入数据
+    function record() {
+        $Record = M('Record');
+        $date = '150601';
+        $time = strtotime('2015-06-01');
+        for ($shop = 1;$shop<=12;$shop++) {
+            for ($score = 58;$score<68;$score++) {
+                for ($i = 0;$i<5;$i++) {
+                    $data['shop'] = $shop;
+                    $data['user'] = '0';
+                    $data['date'] = $date;
+                    $data['score'] = $score;
+                    $data['time'] = $time;
+                    $Record->add($data);
+                    $time++;
+                }
+            }
+        }
     }
 
     //检测兑换码
