@@ -1,0 +1,51 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+	<style>
+		body{padding: 50px 0 0 0}
+	</style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+		<div>玩家总数： <span class="total_count">{$player_count}</span></div>
+		<div>游戏总数： <span class="total_count">{$record_count}</span></div>
+		<div>兑换码数： <span class="total_count">{$coupon_count}</span></div>
+		<div style="margin-top: 50px;">
+			<div style="font-weight: bold;font-size: 18px;margin-bottom: 10px;">各分店的统计</div>
+			<table>
+				<tr>
+					<th align="left" width="150">分店名称</th>
+					<th align="left" width="100">玩家数量</th>
+					<th align="left" width="100">兑换码数</th>
+				</tr>
+				<volist name="shop_player_stat" id="vo">
+				<tr>
+					<td>{$shop_name[$vo['shop']]}：</td>
+					<td>{$vo['count(shop)']}</td>
+					<td>{$vo['count(coupon)']|default=0}</td>
+				</tr>
+				</volist>
+			</table>
+		</div>
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    /* 插件块关闭操作 */
+    $(".title-opt .wm-slide").each(function(){
+        $(this).click(function(){
+            $(this).closest(".columns-mod").find(".bd").toggle();
+            $(this).find("i").toggleClass("mod-up");
+        });
+    })
+    $(function(){
+        // $('#main').attr({'id': 'indexMain','class': 'index-main'});
+        $('.sidebar').remove();
+    })
+</script>
+</block>
