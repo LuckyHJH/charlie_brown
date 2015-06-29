@@ -39,7 +39,7 @@ class AjaxController extends HomeController {
             $user = M('Player')->add(array(
                 'user_agent'=>$_SERVER['HTTP_USER_AGENT']
             ));
-            cookie('user', $user);
+            cookie('user', $user, 86400*100);
         } else {
 //            M('Player')->where('id = '.$user)->save(array(
 //            ));
@@ -60,7 +60,7 @@ class AjaxController extends HomeController {
         $shop = intval($_REQUEST['shop']);
         if ($shop < 1 || $shop > 12)
             $this->_output(array(), '数据错误', 1);
-        cookie('shop', $shop);
+        cookie('shop', $shop, 86400*100);
         $user = cookie('user');
         $info = M('Player')->where('id = '.$user)->find();
         if (!empty($info['shop']))
@@ -127,12 +127,16 @@ class AjaxController extends HomeController {
             $this->_output(array(), '发生了错误，请再试一次', 4);
 
         //也可以用attribute表ID=59的extra
-        $shop_map = array('', '查理布朗三亚店','兰州城关店', '兰州广武店', '上海徐汇店',
-            '上海杨浦店', '重庆店', '郑州店', '沈阳店',
-            '贵阳店', '鸡西店', '哈尔滨店', '银川店',
-        );
+        $shop_map = C('SHOP_NAME');
         $shop_name = $shop_map[$shop];
-        if ($percent >= 0.9) {
+        //分数高于140直接中奖
+        if ($score >= 140) {
+            if ($percent >= 0.9) {
+                $percent = 89;
+            } else {
+                $percent = mt_rand(8900,8999) / 100;
+            }
+
             $coupon = mt_rand(10000000, 99999999);//TODO 不能已存在
             $coupon_data = array(
                 'user'=>$user,
@@ -146,8 +150,14 @@ class AjaxController extends HomeController {
                 M('Record')->where(array('id'=>$result))->delete();
                 $this->_output(array(), '发生了错误，请再试一次', 4);
             }
-            cookie('coupon', $coupon);
+            cookie('coupon', $coupon, 86400*100);
         } else {
+            if ($percent >= 0.9) {
+                $percent = round($percent * 100, 2);
+            } else {
+                $percent = 90;
+            }
+
             $coupon = '';
         }
 
@@ -156,7 +166,7 @@ class AjaxController extends HomeController {
             'count'=>$count+1,
             'chance'=>$chance-($count+1),
             'shop_name'=>$shop_name,
-            'percent'=>strval(round($percent * 100, 2)),
+            'percent'=>strval($percent),
             'coupon'=>$coupon
         ));
     }
@@ -175,17 +185,54 @@ class AjaxController extends HomeController {
         $date = '150601';
         $time = strtotime('2015-06-01');
         for ($shop = 1;$shop<=12;$shop++) {
-            for ($score = 58;$score<68;$score++) {
-                for ($i = 0;$i<5;$i++) {
-                    $data['shop'] = $shop;
-                    $data['user'] = '0';
-                    $data['date'] = $date;
-                    $data['score'] = $score;
-                    $data['time'] = $time;
-                    $Record->add($data);
-                    $time++;
-                }
-            }
+            //第六波插入的分数
+//            for ($score = 97;$score<99;$score++) {
+//                for ($i = 0;$i<20;$i++) {
+//                    $data['shop'] = $shop;
+//                    $data['user'] = '0';
+//                    $data['date'] = $date;
+//                    $data['score'] = $score;
+//                    $data['time'] = $time;
+//                    $Record->add($data);
+//                    $time++;
+//                }
+//            }
+            //第四、五波插入的分数
+//            for ($score = 78;$score<88;$score++) {
+//                for ($i = 0;$i<5;$i++) {
+//                    $data['shop'] = $shop;
+//                    $data['user'] = '0';
+//                    $data['date'] = $date;
+//                    $data['score'] = $score;
+//                    $data['time'] = $time;
+//                    $Record->add($data);
+//                    $time++;
+//                }
+//            }
+            //第三波插入的分数
+//            for ($score = 68;$score<78;$score++) {
+//                for ($i = 0;$i<5;$i++) {
+//                    $data['shop'] = $shop;
+//                    $data['user'] = '0';
+//                    $data['date'] = $date;
+//                    $data['score'] = $score;
+//                    $data['time'] = $time;
+//                    $Record->add($data);
+//                    $time++;
+//                }
+//            }
+            //第一、二波插入的分数
+//            for ($score = 58;$score<68;$score++) {
+//                for ($i = 0;$i<5;$i++) {
+//                    $data['shop'] = $shop;
+//                    $data['user'] = '0';
+//                    $data['date'] = $date;
+//                    $data['score'] = $score;
+//                    $data['time'] = $time;
+//                    $Record->add($data);
+//                    $time++;
+//                }
+//            }
         }
     }
 
